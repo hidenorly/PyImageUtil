@@ -12,6 +12,7 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
+import os
 from PIL import Image
 from io import BytesIO
 import cairosvg
@@ -22,8 +23,8 @@ class ImageUtil:
         filename = os.path.splitext(filename)[0]
         return filename + ext
 
-    def covertToJpeg(imageFile):
-        outFilename = ImageUtil.getFilenameWithExt(imageFile, ".jpeg")
+    def covertToJpeg(imageFile, outputPath=""):
+        outFilename = os.path.join(outputPath, ImageUtil.getFilenameWithExt(imageFile, ".jpeg"))
         image = None
         if imageFile.endswith(('.heic', '.HEIC')):
             try:
