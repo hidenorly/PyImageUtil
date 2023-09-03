@@ -25,10 +25,17 @@ if __name__ == '__main__':
     parser.add_argument("-t", "--height", default=1080, help="output height")
     args = parser.parse_args()
 
-    imgPaths = []
-    for dirpath, dirnames, filenames in os.walk(args.input):
-        for filename in filenames:
-            # convert required image
-            if filename.endswith(('.svg', '.SVG')):
-                outputPath = os.path.join(args.output, ImageUtil.getFilenameWithExt(filename, ".png"))
-                filename = ImageUtil.convertSvgToPng(os.path.join(dirpath, filename), outputPath, args.width, args.height)
+    imgPaths = {}
+    if os.path.exists(args.input):
+        if os.path.isdir(args.input):
+            for dirpath, dirnames, filenames in os.walk(args.input):
+                for filename in filenames:
+                    # convert required image
+                    if filename.endswith(('.svg', '.SVG')):
+                        outputPath = os.path.join(args.output, ImageUtil.getFilenameWithExt(filename, ".png"))
+                        imgPaths[os.path.join(dirpath, filename)] = outputPath
+        else:
+            imgPaths[args.input] = os.path.join(args.output, ImageUtil.getFilenameWithExt(args.input, ".png"))
+
+    for inputPath, outputPath in imgPaths.items():
+        ImageUtil.convertSvgToPng(inputPath, outputPath, args.width, args.height)
