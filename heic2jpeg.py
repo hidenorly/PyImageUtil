@@ -24,8 +24,15 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     imgPaths = []
-    for dirpath, dirnames, filenames in os.walk(args.input):
-        for filename in filenames:
-            # convert required image
-            if filename.endswith(('.heic', '.HEIC')):
-                filename = ImageUtil.covertToJpeg(os.path.join(dirpath, filename), args.output)
+    if os.path.exists(args.input):
+        if os.path.isdir(args.input):
+            for dirpath, dirnames, filenames in os.walk(args.input):
+                for filename in filenames:
+                    # convert required image
+                    if filename.endswith(('.heic', '.HEIC')):
+                        imgPaths.append( os.path.join(dirpath, filename) )
+        else:
+            imgPaths.append(args.input)
+
+    for inputPath in imgPaths:
+        ImageUtil.covertToJpeg(inputPath, args.output)
