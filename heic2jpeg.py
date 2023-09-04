@@ -19,20 +19,21 @@ from ImageUtil import ImageUtil
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='convert .heic to .jpeg', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument("-i", "--input", default=".", help="Input folder path")
+    parser.add_argument("-i", "--input", action='append', default=["."], help="Input folder path")
     parser.add_argument("-o", "--output", default=".", help="output folder path")
     args = parser.parse_args()
 
     imgPaths = []
-    if os.path.exists(args.input):
-        if os.path.isdir(args.input):
-            for dirpath, dirnames, filenames in os.walk(args.input):
-                for filename in filenames:
-                    # convert required image
-                    if filename.endswith(('.heic', '.HEIC')):
-                        imgPaths.append( os.path.join(dirpath, filename) )
-        else:
-            imgPaths.append(args.input)
+    for anInput in args.input:
+        if os.path.exists(anInput):
+            if os.path.isdir(anInput):
+                for dirpath, dirnames, filenames in os.walk(anInput):
+                    for filename in filenames:
+                        # convert required image
+                        if filename.endswith(('.heic', '.HEIC')):
+                            imgPaths.append( os.path.join(dirpath, filename) )
+            else:
+                imgPaths.append(anInput)
 
     for inputPath in imgPaths:
         ImageUtil.covertToJpeg(inputPath, args.output)
