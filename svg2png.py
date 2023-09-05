@@ -19,23 +19,24 @@ from ImageUtil import ImageUtil
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='convert .svg to .png', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    parser.add_argument("-i", "--input", default=".", help="Input folder path")
+    parser.add_argument("-i", "--input", action='append', default=["."], help="Input folder path")
     parser.add_argument("-o", "--output", default=".", help="output folder path")
     parser.add_argument("-w", "--width", default=1920, help="output width")
     parser.add_argument("-t", "--height", default=1080, help="output height")
     args = parser.parse_args()
 
     imgPaths = {}
-    if os.path.exists(args.input):
-        if os.path.isdir(args.input):
-            for dirpath, dirnames, filenames in os.walk(args.input):
-                for filename in filenames:
-                    # convert required image
-                    if filename.endswith(('.svg', '.SVG')):
-                        outputPath = os.path.join(args.output, ImageUtil.getFilenameWithExt(filename, ".png"))
-                        imgPaths[os.path.join(dirpath, filename)] = outputPath
-        else:
-            imgPaths[args.input] = os.path.join(args.output, ImageUtil.getFilenameWithExt(args.input, ".png"))
+    for anInput in args.input:
+        if os.path.exists(anInput):
+            if os.path.isdir(anInput):
+                for dirpath, dirnames, filenames in os.walk(anInput):
+                    for filename in filenames:
+                        # convert required image
+                        if filename.endswith(('.svg', '.SVG')):
+                            outputPath = os.path.join(args.output, ImageUtil.getFilenameWithExt(filename, ".png"))
+                            imgPaths[os.path.join(dirpath, filename)] = outputPath
+            else:
+                imgPaths[anInput] = os.path.join(args.output, ImageUtil.getFilenameWithExt(anInput, ".png"))
 
     for inputPath, outputPath in imgPaths.items():
         ImageUtil.convertSvgToPng(inputPath, outputPath, args.width, args.height)
