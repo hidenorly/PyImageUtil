@@ -45,6 +45,12 @@ class ImageUtil:
             except:
                 pass
         if image:
+            if image.mode == 'RGBA':
+                # fallback. this .heic includes alpha then need to save as ".png"
+                pngFilename = ImageUtil.getFilenameWithExt(outFilename, ".png")
+                image.save(pngFilename, "PNG")
+                # And for jpeg required case, need to remove the alpha...
+                image = image.convert('RGB')
             image.save(outFilename, "JPEG")
         return outFilename
 
