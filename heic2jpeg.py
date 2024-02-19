@@ -1,4 +1,4 @@
-#   Copyright 2023 hidenorly
+#   Copyright 2023, 2024 hidenorly
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='convert .heic to .jpeg', formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("-i", "--input", action='append', default=["."], help="Input folder path")
     parser.add_argument("-o", "--output", default=".", help="output folder path")
+    parser.add_argument("-n", "--noJpegIfFallback", default=False, action="store_true", help="Specify if you want no jpeg in case of fallback")
     args = parser.parse_args()
 
     imgPaths = []
@@ -36,4 +37,4 @@ if __name__ == '__main__':
                 imgPaths.append(anInput)
 
     for inputPath in imgPaths:
-        ImageUtil.covertToJpeg(inputPath, args.output)
+        ImageUtil.covertToJpeg(inputPath, args.output, True, args.noJpegIfFallback)

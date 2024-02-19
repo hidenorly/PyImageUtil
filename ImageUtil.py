@@ -1,4 +1,4 @@
-#   Copyright 2023 hidenorly
+#   Copyright 2023, 2024 hidenorly
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ class ImageUtil:
         filename = os.path.splitext(filename)[0]
         return filename + ext
 
-    def covertToJpeg(imageFile, outputPath=""):
+    def covertToJpeg(imageFile, outputPath="", fallbackToPngEnabled=True, noJpefIfFallback=True):
         outFilename = os.path.join(outputPath, ImageUtil.getFilenameWithExt(imageFile, ".jpeg"))
         image = None
         if imageFile.endswith(('.heic', '.HEIC')):
@@ -46,9 +46,12 @@ class ImageUtil:
                 pass
         if image:
             if image.mode == 'RGBA':
-                # fallback. this .heic includes alpha then need to save as ".png"
-                pngFilename = ImageUtil.getFilenameWithExt(outFilename, ".png")
-                image.save(pngFilename, "PNG")
+                if fallbackToPngEnabled:
+                    # fallback. this .heic includes alpha then need to save as ".png"
+                    pngFilename = ImageUtil.getFilenameWithExt(outFilename, ".png")
+                    image.save(pngFilename, "PNG")
+                    if noJpefIfFallback:
+                        return outFilename
                 # And for jpeg required case, need to remove the alpha...
                 image = image.convert('RGB')
             image.save(outFilename, "JPEG")
