@@ -55,6 +55,9 @@ class ImageUtil:
                 # And for jpeg required case, need to remove the alpha...
                 image = image.convert('RGB')
             image.save(outFilename, "JPEG")
+
+            if not os.path.isfile(outFilename):
+                outFilename = None
         return outFilename
 
     def getImageSize(imageFile):

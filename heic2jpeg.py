@@ -22,6 +22,7 @@ if __name__ == '__main__':
     parser.add_argument("-i", "--input", action='append', default=["."], help="Input folder path")
     parser.add_argument("-o", "--output", default=".", help="output folder path")
     parser.add_argument("-n", "--noJpegIfFallback", default=False, action="store_true", help="Specify if you want no jpeg in case of fallback")
+    parser.add_argument("-d", "--deleteIfSuccess", default=False, action="store_true", help="Specify if you want to delete source .HEIC files")
     args = parser.parse_args()
 
     imgPaths = []
@@ -36,5 +37,15 @@ if __name__ == '__main__':
             else:
                 imgPaths.append(anInput)
 
+    convertSuccessFiles = []
     for inputPath in imgPaths:
-        ImageUtil.covertToJpeg(inputPath, args.output, True, args.noJpegIfFallback)
+        outFilename = ImageUtil.covertToJpeg(inputPath, args.output, True, args.noJpegIfFallback)
+        if outFilename:
+            convertSuccessFiles.append(outFilename)
+
+    if args.deleteIfSuccess:
+        for aPath in convertSuccessFiles:
+            try:
+                os.remove(aPath)
+            except:
+                pass
