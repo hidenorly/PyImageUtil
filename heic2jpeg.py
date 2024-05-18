@@ -41,7 +41,7 @@ if __name__ == '__main__':
     for inputPath in imgPaths:
         outFilename = ImageUtil.covertToJpeg(inputPath, args.output, True, args.noJpegIfFallback)
         if outFilename:
-            convertSuccessFiles.append(outFilename)
+            convertSuccessFiles.append(inputPath)
 
     if args.deleteIfSuccess:
         for aPath in convertSuccessFiles:
