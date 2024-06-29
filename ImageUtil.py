@@ -56,7 +56,7 @@ class ImageUtil:
                 image = image.convert('RGB')
             image.save(outFilename, "JPEG")
 
-            if not os.path.isfile(outFilename):
+            if not os.path.exists(outFilename):
                 outFilename = None
         return outFilename
 

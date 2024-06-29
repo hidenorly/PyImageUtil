@@ -40,8 +40,11 @@ if __name__ == '__main__':
     convertSuccessFiles = []
     for inputPath in imgPaths:
         outFilename = ImageUtil.covertToJpeg(inputPath, args.output, True, args.noJpegIfFallback)
-        if outFilename:
+        if outFilename and os.path.exists(outFilename):
             convertSuccessFiles.append(inputPath)
+
+    if len(imgPaths)!=len(convertSuccessFiles):
+        print(f'error occured. # of input:{len(imgPaths)} but # of output:{len(convertSuccessFiles)}')
 
     if args.deleteIfSuccess:
         for aPath in convertSuccessFiles:
