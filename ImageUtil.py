@@ -17,14 +17,17 @@ from PIL import Image
 from io import BytesIO
 import cairosvg
 import pyheif
+try:
+    import pillow_avif
+except:
+    pass
 
 class ImageUtil:
     def getFilenameWithExt(filename, ext=".jpeg"):
         filename = os.path.splitext(filename)[0]
         return filename + ext
 
-    def covertToJpeg(imageFile, outputPath="", fallbackToPngEnabled=True, noJpefIfFallback=True):
-        outFilename = os.path.join(outputPath, ImageUtil.getFilenameWithExt(imageFile, ".jpeg"))
+    def getImage(imageFile):
         image = None
         if imageFile.endswith(('.heic', '.HEIC')):
             try:
@@ -44,6 +47,12 @@ class ImageUtil:
                 image = Image.open(imageFile)
             except:
                 pass
+        return image
+
+
+    def covertToJpeg(imageFile, outputPath="", fallbackToPngEnabled=True, noJpefIfFallback=True):
+        outFilename = ImageUtil.getFilenameWithExt(imageFile, ".jpeg")
+        image = ImageUtil.getImage(imageFile)
         if image:
             if image.mode == 'RGBA':
                 if fallbackToPngEnabled:
@@ -58,6 +67,16 @@ class ImageUtil:
 
             if not os.path.exists(outFilename):
                 outFilename = None
+        return outFilename
+
+    def covertToPng(imageFile):
+        outFilename = ImageUtil.getFilenameWithExt(imageFile, ".png")
+        image = ImageUtil.getImage(imageFile)
+        if image:
+            try:
+                image.save(outFilename, "PNG")
+            except:
+                pass
         return outFilename
 
     def getImageSize(imageFile):
