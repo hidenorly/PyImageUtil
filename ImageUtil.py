@@ -54,7 +54,7 @@ class ImageUtil:
         outFilename = ImageUtil.getFilenameWithExt(imageFile, ".jpeg")
         image = ImageUtil.getImage(imageFile)
         if image:
-            if image.mode == 'RGBA':
+            if image.mode in ("RGBA", "LA") or (image.mode == "P" and "transparency" in image.info):
                 if fallbackToPngEnabled:
                     # fallback. this .heic includes alpha then need to save as ".png"
                     pngFilename = ImageUtil.getFilenameWithExt(outFilename, ".png")
